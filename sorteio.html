@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <title>Sorteio de Vagas de Garagem com Unidades de Apartamento</title>
+</head>
+<body>
+    <h1>Sorteio de Vagas de Garagem com Unidades de Apartamento</h1>
+    <button onclick="realizarSorteio()">Realizar Sorteio</button>
+
+    <h2>Vagas Individuais</h2>
+    <ul id="vagasIndividuais"></ul>
+
+    <h2>Vagas Duplas</h2>
+    <ul id="vagasDuplas"></ul>
+
+    <h2>Vagas Triplas</h2>
+    <ul id="vagasTriplas"></ul>
+
+    <script>
+        // Função para realizar o sorteio de vagas
+        function realizarSorteio() {
+            const vagasIndividuais = [];
+            const vagasDuplas = [];
+            const vagasTriplas = [];
+            const unidades = [];
+
+            // Preencha as vagas de duplas com números de 4 a 73.
+            for (let i = 4; i <= 73; i += 2) {
+                vagasDuplas.push([i, i + 1]);
+            }
+
+            // Preencha as vagas de triplas com números de 74 a 223.
+            for (let i = 74; i <= 223; i += 3) {
+                vagasTriplas.push([i, i + 1, i + 2]);
+            }
+
+            // Preencha a lista de unidades.
+            for (let i = 1; i <= 223; i++) {
+                unidades.push(`Unidade ${i}`);
+            }
+
+            // Embaralhe a ordem das unidades de forma aleatória.
+            unidades.sort(() => Math.random() - 0.5);
+
+            // Exiba os resultados na página.
+            const vagasIndividuaisList = document.getElementById("vagasIndividuais");
+            const vagasDuplasList = document.getElementById("vagasDuplas");
+            const vagasTriplasList = document.getElementById("vagasTriplas");
+
+            vagasIndividuaisList.innerHTML = "<li>Vagas Individuais:</li>";
+            vagasDuplasList.innerHTML = "<li>Vagas Duplas:</li>";
+            vagasTriplasList.innerHTML = "<li>Vagas Triplas:</li>";
+
+            for (let i = 1; i <= 3; i++) {
+                if (unidades.length > 0) {
+                    vagasIndividuaisList.innerHTML += `<li>Vaga Individual ${i}: ${unidades.shift()}</li>`;
+                }
+            }
+
+            vagasDuplas.forEach((vagas, index) => {
+                const unidadesSorteadas = unidades.splice(0, vagas.length);
+                vagasDuplasList.innerHTML += `<li>Vaga Dupla ${vagas[0]} e ${vagas[1]}: ${unidadesSorteadas.join(', ')}</li>`;
+            });
+
+            vagasTriplas.forEach((vagas, index) => {
+                const unidadesSorteadas = unidades.splice(0, vagas.length);
+                vagasTriplasList.innerHTML += `<li>Vaga Tripla ${vagas[0]}, ${vagas[1]}, e ${vagas[2]}: ${unidadesSorteadas.join(', ')}</li>`;
+            });
+        }
+    </script>
+</body>
+</html>
