@@ -1,74 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+
 <head>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
     <title>Sorteio de Vagas de Garagem com Unidades de Apartamento</title>
 </head>
+
 <body>
-    <h1>Sorteio de Vagas de Garagem com Unidades de Apartamento</h1>
-    <button onclick="realizarSorteio()">Realizar Sorteio</button>
+    <div id="loader" class="hidden">
+        <div class="spinner"></div>
+    </div>
+    <div id="contador" style="font-size: 3em; text-align: center;"></div>
 
-    <h2>Vagas Individuais</h2>
-    <ul id="vagasIndividuais"></ul>
+    <div class="container">
 
-    <h2>Vagas Duplas</h2>
-    <ul id="vagasDuplas"></ul>
+        <div class="search-box" id="searchBox">
+            <input type="text" id="searchInput" placeholder="Digite a unidade para filtrar...">
+            <span class="search-icon">&#128269;</span>
+        </div>
 
-    <h2>Vagas Triplas</h2>
-    <ul id="vagasTriplas"></ul>
 
-    <script>
-        // Função para realizar o sorteio de vagas
-        function realizarSorteio() {
-            const vagasIndividuais = [];
-            const vagasDuplas = [];
-            const vagasTriplas = [];
-            const unidades = [];
+        <h1>Sorteio de Vagas de Garagem com Unidades de Apartamento</h1>
+        <button onclick="realizarSorteio()">Realizar Sorteio</button>
 
-            // Preencha as vagas de duplas com números de 4 a 73.
-            for (let i = 4; i <= 73; i += 2) {
-                vagasDuplas.push([i, i + 1]);
-            }
+        <h2><i class="fas fa-user"></i> Vagas Individuais</h2>
+        <ul id="vagasIndividuais"></ul>
 
-            // Preencha as vagas de triplas com números de 74 a 223.
-            for (let i = 74; i <= 223; i += 3) {
-                vagasTriplas.push([i, i + 1, i + 2]);
-            }
+        <h2><i class="fas fa-user-friends"></i> Vagas Duplas</h2>
+        <ul id="vagasDuplas"></ul>
 
-            // Preencha a lista de unidades.
-            for (let i = 1; i <= 223; i++) {
-                unidades.push(`Unidade ${i}`);
-            }
+        <h2><i class="fas fa-users"></i> Vagas Triplas</h2>
+        <ul id="vagasTriplas"></ul>
+    </div>
 
-            // Embaralhe a ordem das unidades de forma aleatória.
-            unidades.sort(() => Math.random() - 0.5);
-
-            // Exiba os resultados na página.
-            const vagasIndividuaisList = document.getElementById("vagasIndividuais");
-            const vagasDuplasList = document.getElementById("vagasDuplas");
-            const vagasTriplasList = document.getElementById("vagasTriplas");
-
-            vagasIndividuaisList.innerHTML = "<li>Vagas Individuais:</li>";
-            vagasDuplasList.innerHTML = "<li>Vagas Duplas:</li>";
-            vagasTriplasList.innerHTML = "<li>Vagas Triplas:</li>";
-
-            for (let i = 1; i <= 3; i++) {
-                if (unidades.length > 0) {
-                    vagasIndividuaisList.innerHTML += `<li>Vaga Individual ${i}: ${unidades.shift()}</li>`;
-                }
-            }
-
-            vagasDuplas.forEach((vagas, index) => {
-                const unidadesSorteadas = unidades.splice(0, vagas.length);
-                vagasDuplasList.innerHTML += `<li>Vaga Dupla ${vagas[0]} e ${vagas[1]}: ${unidadesSorteadas.join(', ')}</li>`;
-            });
-
-            vagasTriplas.forEach((vagas, index) => {
-                const unidadesSorteadas = unidades.splice(0, vagas.length);
-                vagasTriplasList.innerHTML += `<li>Vaga Tripla ${vagas[0]}, ${vagas[1]}, e ${vagas[2]}: ${unidadesSorteadas.join(', ')}</li>`;
-            });
-        }
-    </script>
+    <script src="./scripts/index.js"></script>
 </body>
+
 </html>
