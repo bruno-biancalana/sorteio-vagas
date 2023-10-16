@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Administração - Resultados do Sorteio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Resultados do Sorteio</h2>
+    <table id="vagasIndividuais">
+        <thead>
+            <tr>
+                <th>Vagas Individuais</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <table id="vagasDuplas">
+        <thead>
+            <tr>
+                <th>Vagas Duplas</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <table id="vagasTriplas">
+        <thead>
+            <tr>
+                <th>Vagas Triplas</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const vagasIndividuaisTBody = document.querySelector("#vagasIndividuais tbody");
+        const vagasDuplasTBody = document.querySelector("#vagasDuplas tbody");
+        const vagasTriplasTBody = document.querySelector("#vagasTriplas tbody");
+
+        function loadResultsFromLocalStorage() {
+            const individuais = JSON.parse(localStorage.getItem('vagasIndividuais') || '[]');
+            const duplas = JSON.parse(localStorage.getItem('vagasDuplas') || '[]');
+            const triplas = JSON.parse(localStorage.getItem('vagasTriplas') || '[]');
+
+            individuais.forEach(vaga => {
+                vagasIndividuaisTBody.innerHTML += `<tr><td>${vaga}</td></tr>`;
+            });
+            duplas.forEach(vaga => {
+                vagasDuplasTBody.innerHTML += `<tr><td>${vaga}</td></tr>`;
+            });
+            triplas.forEach(vaga => {
+                vagasTriplasTBody.innerHTML += `<tr><td>${vaga}</td></tr>`;
+            });
+        }
+
+        loadResultsFromLocalStorage();
+    </script>
+</body>
+</html>
