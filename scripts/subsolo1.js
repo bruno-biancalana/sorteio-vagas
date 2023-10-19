@@ -1,5 +1,25 @@
 let debounceTimeout;
-let intervaloContador;
+let countdown;
+
+// vagas vagasDuplas sub-solo-1
+const vagasDuplas = [
+    58, 59, 74, 75, 76, 77, 78, 79, 80, 81, 85,
+    86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
+    101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
+    111, 112, 113, 114, 115, 116, 117, 118, 119, 120
+];
+
+// vagas vagasTriplas sub-solo-1
+const vagasTriplas = [
+    1, 2, 3, 4, 5, 6, 7, 9, 10,
+    11, 12, 13, 14, 15, 16, 17,
+    18, 19, 20, 21, 22, 23, 24, 24,
+    25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+    36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46,
+    47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+    62, 73, 74, 75, 76, 11231
+];
+
 
 function mostrarSpinner() {
     document.getElementById("loader").classList.remove("hidden");
@@ -11,9 +31,8 @@ function ocultarSpinner() {
 
 function playBeep() {
     const beep = new Audio('https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3');
-    // beep.play();
+    beep.play();
 }
-
 
 function restaurarDestaques(idListaVagas) {
     const lista = document.getElementById(idListaVagas);
@@ -23,12 +42,11 @@ function restaurarDestaques(idListaVagas) {
     });
 }
 
-
 function mostrarContador(callback) {
     let counter = 5;
     const displayElement = document.getElementById('contador');
-    
-    displayElement.innerText = counter; 
+
+    displayElement.innerText = counter;
     playBeep();
 
     countdown = setInterval(() => {
@@ -42,12 +60,11 @@ function mostrarContador(callback) {
             callback();
         }
 
-    }, 1000); 
+    }, 1000);
 }
 
-
 function finalizarContador() {
-    clearInterval(intervaloContador);
+    clearInterval(countdown);
     document.getElementById('contador').classList.add('hidden');
 }
 
@@ -57,7 +74,6 @@ function debounce(func, delay = 300) {
         func();
     }, delay);
 }
-
 
 function filtrarVagasPorTermo(idListaVagas, termo) {
     const lista = document.getElementById(idListaVagas);
@@ -115,36 +131,77 @@ function appendToList(list, content) {
     li.innerHTML = content;
     list.appendChild(li);
 }
-function resetSorteio() {
-    document.getElementById("vagasDuplas").innerHTML = '';
-    document.getElementById("vagasTriplas").innerHTML = '';
 
-    const adminLinkContainer = document.getElementById("adminLinkContainer");
+
+
+function embaralharArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 function realizarSorteio() {
-    
-    resetSorteio(); 
+    resetSorteio();
 
     mostrarContador(() => {
-        const unidades = criarListaDeUnidades(223);
-        embaralharArray(unidades);
-
+        
         const vagasDuplasList = document.getElementById("vagasDuplas");
         const vagasTriplasList = document.getElementById("vagasTriplas");
+        const unidadesDuplas = [];
+        const unidadesTriplas = [];
+        const vagasDisponiveisDuplas = [...vagasDuplas];
+        const vagasDisponiveisTriplas = [...vagasTriplas];
 
-        exibirVagasDuplas(4, 73, unidades, vagasDuplasList);
-        exibirVagasTriplas(74, 223, unidades, vagasTriplasList);
+        for (let i = 0; i < vagasDisponiveisDuplas.length; i += 2) {
+            const vaga1 = vagasDisponiveisDuplas[i];
+            const vaga2 = vagasDisponiveisDuplas[i + 1];
+            const unidade1 = `Grupo ${vaga1}`;
+            const unidade2 = `Grupo ${vaga2}`;
+
+            unidadesDuplas.push(unidade1);
+            unidadesDuplas.push(unidade2);
+        }
+
+        embaralharArray(unidadesDuplas); 
+
+        for (let i = 0; i < vagasDisponiveisDuplas.length; i += 2) {
+            const vaga1 = vagasDisponiveisDuplas[i];
+            const vaga2 = vagasDisponiveisDuplas[i + 1];
+            const unidade1 = unidadesDuplas[i];
+            appendToList(
+                vagasDuplasList,
+                `Vaga Dupla ${vaga1} e ${vaga2}: <span class="destaque">${unidade1}</span>`
+            );
+        }
+
+        for (let i = 0; i < vagasDisponiveisTriplas.length; i += 3) {
+            const vaga1 = vagasDisponiveisTriplas[i];
+            const unidade1 = `Grupo ${vaga1}`;
+            unidadesTriplas.push(unidade1);
+        }
+
+        embaralharArray(unidadesTriplas);
+
+        for (let i = 0; i < vagasDisponiveisTriplas.length; i += 3) {
+            const vaga1 = vagasDisponiveisTriplas[i];
+            const vaga2 = vagasDisponiveisTriplas[i + 1];
+            const vaga3 = vagasDisponiveisTriplas[i + 2];
+            const unidade1 = unidadesTriplas[i];
+            appendToList(
+                vagasTriplasList,
+                `Vaga Tripla ${vaga1}, ${vaga2}, e ${vaga3}: <span class="destaque">${unidade1}</span></span>`
+            );
+        }
 
         document.querySelector(".search-box").style.display = "block";
 
-        const adminLink = document.createElement('a');
-        adminLink.href = "admin.html";
-        adminLink.classList.add("admin-link");
-        adminLink.innerText = "Acessar Administração";
-        adminLinkContainer.appendChild(adminLink);
     });
 }
 
+function resetSorteio() {
+    document.getElementById("vagasDuplas").innerHTML = '';
+    document.getElementById("vagasTriplas").innerHTML = '';
+}
 
 function criarListaDeUnidades(max) {
     const unidades = [];
@@ -154,33 +211,37 @@ function criarListaDeUnidades(max) {
     return unidades;
 }
 
-
-function exibirVagasDuplas(start, end, unidades, vagasList) {
+function exibirVagasDuplas(vagasDuplas, unidades, vagasList) {
     const resultadosDuplas = [];
     resultadosDuplas.push("<strong>Vagas Duplas:</strong>");
-    for (let i = start; i <= end; i += 2) {
+
+    vagasDuplas.forEach(vaga => {
         if (unidades.length > 0) {
-            const item = `Vaga Dupla ${i} e ${i + 1}: <span class="destaque">${unidades.shift()}</span>`;
+            const item = `Vaga Dupla ${vaga} e ${vaga + 1}: <span class="destaque">${unidades.shift()}</span>`;
             resultadosDuplas.push(item);
             appendToList(vagasList, item);
         }
-    }
+    });
+
     localStorage.setItem('vagasDuplas', JSON.stringify(resultadosDuplas));
 }
 
-function exibirVagasTriplas(start, end, unidades, vagasList) {
+function exibirVagasTriplas(vagasTriplas, unidades, vagasList) {
     const resultadosTriplas = [];
     resultadosTriplas.push("<strong>Vagas Triplas:</strong>");
-    for (let i = start; i <= end; i += 3) {
+
+    vagasTriplas.forEach(vaga => {
         if (unidades.length >= 3) {
             const unidadesDestaque = unidades.splice(0, 3).map(u => `<span class="destaque">${u}</span>`).join(', ');
-            const item = `Vaga Tripla ${i}, ${i + 1}, e ${i + 2}: ${unidadesDestaque}`;
+            const item = `Vaga Tripla ${vaga}, ${vaga + 1}, e ${vaga + 2}: ${unidadesDestaque}`;
             resultadosTriplas.push(item);
             appendToList(vagasList, item);
         }
-    }
+    });
+
     localStorage.setItem('vagasTriplas', JSON.stringify(resultadosTriplas));
 }
+
 
 document.getElementById("searchInput").addEventListener("keyup", function () {
     debounce(() => {
