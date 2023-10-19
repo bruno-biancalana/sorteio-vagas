@@ -166,3 +166,12 @@ h2 {/* Fonte mais grossa para títulos */
     padding: 2px 6px;    
     border-radius: 4px;   
 }
+
+
+.destaque-verde {
+    font-weight: bold;    
+    background-color: #e0e0e0; 
+    padding: 2px 6px;    
+    border-radius: 4px;   
+    color: rgb(77, 158, 77);
+}

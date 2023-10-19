@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Sorteio de Vagas sub- solo 1 </title>
+</head>
+
+<body>
+    <div id="contador" style="font-size: 3em; text-align: center;"></div>
+
+    <div class="container">
+
+        <div class="search-box" id="searchBox">
+            <input type="text" id="searchInput" placeholder="Digite a unidade para filtrar...">
+            <span class="search-icon">&#128269;</span>
+        </div>
+
+
+        <h1>Sub-solo 1</h1>
+        <button onclick="realizarSorteio()">Realizar Sorteio</button>
+
+        <h2><i class="fas fa-user-friends"></i> Vagas Duplas</h2>
+        <ul id="vagasDuplas"></ul>
+
+        <h2><i class="fas fa-users"></i> Vagas Triplas</h2>
+        <ul id="vagasTriplas"></ul>
+
+        <h2><i class="fas fa-exclamation-triangle"></i> Vagas Remanescentes - Duplas</h2>
+        <ul id="vagasRemanescentesDuplas"></ul>
+
+        <h2><i class="fas fa-exclamation-triangle"></i> Vagas Remanescentes - Triplas</h2>
+        <ul id="vagasRemanescentesTriplas"></ul>
+
+    </div>
+
+    <script src="scripts/subsolo1.js"></script>
+</body>
+
+</html>

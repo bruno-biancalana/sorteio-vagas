@@ -11,7 +11,16 @@ function ocultarSpinner() {
 
 function playBeep() {
     const beep = new Audio('https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3');
-    beep.play();
+    // beep.play();
+}
+
+
+function restaurarDestaques(idListaVagas) {
+    const lista = document.getElementById(idListaVagas);
+    const vagas = lista.querySelectorAll(".destaque");
+    vagas.forEach(vaga => {
+        vaga.classList.remove("destaque");
+    });
 }
 
 
@@ -49,6 +58,7 @@ function debounce(func, delay = 300) {
     }, delay);
 }
 
+
 function filtrarVagasPorTermo(idListaVagas, termo) {
     const lista = document.getElementById(idListaVagas);
     const vagas = lista.querySelectorAll("li");
@@ -59,22 +69,38 @@ function filtrarVagasPorTermo(idListaVagas, termo) {
         const originalText = vaga.getAttribute("data-original") || vaga.innerText;
         vaga.setAttribute("data-original", originalText);
 
-        if (regex.test(originalText)) {
+        if (regex.test(originalText) || termo === "") {
             vaga.style.display = "list-item";
             vaga.innerHTML = termo ? highlightTerm(originalText, regex) : originalText;
             found = true;
+            restaurarDestaques("vagasDuplas");
+            restaurarDestaques("vagasTriplas");
         } else {
             vaga.style.display = "none";
         }
     });
 
-    if (!found) {
+    if (!found && termo === "") {
         lista.innerHTML = "<li>Nenhum resultado encontrado</li>";
+        restaurarDestaques("vagasDuplas");
+        restaurarDestaques("vagasTriplas");
     }
 }
 
+document.getElementById("searchInput").addEventListener("keyup", function () {
+    debounce(() => {
+        const searchTerm = this.value.trim().toLowerCase();
+        if (searchTerm === "") {
+            restaurarDestaques("vagasDuplas");
+            restaurarDestaques("vagasTriplas");
+        }
+        filtrarVagasPorTermo("vagasDuplas", searchTerm);
+        filtrarVagasPorTermo("vagasTriplas", searchTerm);
+    });
+});
+
 function highlightTerm(text, regex) {
-    return text.replace(regex, match => `<span class='highlight'>${match}</span>`);
+    return text.replace(regex, match => `<span class='highlight destaque'>${match}</span>`);
 }
 
 function embaralharArray(array) {
@@ -90,24 +116,22 @@ function appendToList(list, content) {
     list.appendChild(li);
 }
 function resetSorteio() {
-    document.getElementById("vagasIndividuais").innerHTML = '';
     document.getElementById("vagasDuplas").innerHTML = '';
     document.getElementById("vagasTriplas").innerHTML = '';
 
     const adminLinkContainer = document.getElementById("adminLinkContainer");
 }
 function realizarSorteio() {
+    
     resetSorteio(); 
 
     mostrarContador(() => {
         const unidades = criarListaDeUnidades(223);
         embaralharArray(unidades);
 
-        const vagasIndividuaisList = document.getElementById("vagasIndividuais");
         const vagasDuplasList = document.getElementById("vagasDuplas");
         const vagasTriplasList = document.getElementById("vagasTriplas");
 
-        exibirVagasIndividuais(unidades, vagasIndividuaisList, 3);
         exibirVagasDuplas(4, 73, unidades, vagasDuplasList);
         exibirVagasTriplas(74, 223, unidades, vagasTriplasList);
 
@@ -120,6 +144,8 @@ function realizarSorteio() {
         adminLinkContainer.appendChild(adminLink);
     });
 }
+
+
 function criarListaDeUnidades(max) {
     const unidades = [];
     for (let i = 1; i <= max; i++) {
@@ -128,23 +154,10 @@ function criarListaDeUnidades(max) {
     return unidades;
 }
 
-function exibirVagasIndividuais(unidades, vagasList, quantidade) {
-    const resultadosIndividuais = [];
-    resultadosIndividuais.push("Vagas Individuais:");
-    for (let i = 1; i <= quantidade; i++) {
-        if (unidades.length > 0) {
-            const unidade = unidades.shift();
-            const item = `Vaga Individual ${i}: <span class="destaque">${unidade}</span>`;
-            resultadosIndividuais.push(item);
-            appendToList(vagasList, item);
-        }
-    }
-    localStorage.setItem('vagasIndividuais', JSON.stringify(resultadosIndividuais));
-}
 
 function exibirVagasDuplas(start, end, unidades, vagasList) {
     const resultadosDuplas = [];
-    resultadosDuplas.push("Vagas Duplas:");
+    resultadosDuplas.push("<strong>Vagas Duplas:</strong>");
     for (let i = start; i <= end; i += 2) {
         if (unidades.length > 0) {
             const item = `Vaga Dupla ${i} e ${i + 1}: <span class="destaque">${unidades.shift()}</span>`;
@@ -155,10 +168,9 @@ function exibirVagasDuplas(start, end, unidades, vagasList) {
     localStorage.setItem('vagasDuplas', JSON.stringify(resultadosDuplas));
 }
 
-
 function exibirVagasTriplas(start, end, unidades, vagasList) {
     const resultadosTriplas = [];
-    resultadosTriplas.push("Vagas Triplas:");
+    resultadosTriplas.push("<strong>Vagas Triplas:</strong>");
     for (let i = start; i <= end; i += 3) {
         if (unidades.length >= 3) {
             const unidadesDestaque = unidades.splice(0, 3).map(u => `<span class="destaque">${u}</span>`).join(', ');
@@ -174,7 +186,6 @@ document.getElementById("searchInput").addEventListener("keyup", function () {
     debounce(() => {
         const searchTerm = this.value.trim().toLowerCase();
 
-        filtrarVagasPorTermo("vagasIndividuais", searchTerm);
         filtrarVagasPorTermo("vagasDuplas", searchTerm);
         filtrarVagasPorTermo("vagasTriplas", searchTerm);
     });
